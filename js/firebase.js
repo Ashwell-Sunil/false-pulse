@@ -111,6 +111,14 @@ export async function ensureAuth() {
           resolve(cred.user.uid);
         } catch (error) {
           console.error("[Firebase] Anonymous sign-in failed:", error);
+          if (error.code === "auth/admin-restricted-operation") {
+            const friendlyErr = new Error(
+              "Anonymous Authentication is disabled in Firebase. Please enable it in Firebase Console > Authentication > Sign-in method > Anonymous > Enable."
+            );
+            friendlyErr.code = error.code;
+            reject(friendlyErr);
+            return;
+          }
           reject(error);
         }
       }
