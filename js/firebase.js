@@ -51,13 +51,13 @@ export { serverTimestamp };
  * ============================================================================
  */
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD5xQT90Tw1NrvmYRxWapHD4XNPA1iLUh8",
+  authDomain: "false-pulse-game.firebaseapp.com",
+  databaseURL: "https://false-pulse-game-default-rtdb.firebaseio.com",
+  projectId: "false-pulse-game",
+  storageBucket: "false-pulse-game.firebasestorage.app",
+  messagingSenderId: "818499010155",
+  appId: "1:818499010155:web:76852c41687e941e903b2e"
 };
 
 // Internal singletons
