@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>False Pulse - In-Person Horror Deduction</title>
+
+  <!-- Google Fonts: Creepster for eerie headings, Inter for clean UI, JetBrains Mono for room codes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Lightweight QR Code Library (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Core Theme & Styles -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Atmospheric fog layer for menu views -->
+    <div class="bg-fog" aria-hidden="true"></div>
+
+    <!-- Quick Dev Switcher for Router Preview -->
+    <nav class="dev-nav-bar" aria-label="Dev Screen Switcher">
+      <button type="button" class="dev-nav-btn active" data-screen="home">1. Home</button>
+      <button type="button" class="dev-nav-btn" data-screen="create">2. Create</button>
+      <button type="button" class="dev-nav-btn" data-screen="join">3. Join</button>
+      <button type="button" class="dev-nav-btn" data-screen="lobby">4. Lobby</button>
+      <button type="button" class="dev-nav-btn" data-screen="game">5. Game</button>
+      <button type="button" class="dev-nav-btn" data-screen="vote">6. Vote</button>
+      <button type="button" class="dev-nav-btn" data-screen="end">7. End</button>
+    </nav>
+
+    <!-- ==================== SCREEN 1: HOME ==================== -->
+    <section id="screen-home" class="screen active" aria-labelledby="home-title">
+      <div class="screen-body">
+        <div class="badge">
+          <span class="badge-pulse"></span>
+          <span>Spookathon &bull; Track 4</span>
+        </div>
+
+        <div style="text-align: center; margin: 1rem 0;">
+          <h1 id="home-title" class="title-glitch">FALSE PULSE</h1>
+          <p class="subtitle">Listen closely. The heartbeat doesn't lie.</p>
+        </div>
+
+        <div class="card" style="text-align: center;">
+          <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.45;">
+            An in-person, room-scale audio deduction game for smartphones. Screens go pitch black, static fills the room, and one player carries a hidden pulse.
+          </p>
+        </div>
+      </div>
+
+      <div class="screen-footer">
+        <button type="button" id="btn-home-create" class="btn btn-primary">CREATE ROOM</button>
+        <button type="button" id="btn-home-join" class="btn btn-secondary">JOIN ROOM</button>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 2: CREATE ==================== -->
+    <section id="screen-create" class="screen" aria-labelledby="create-title">
+      <header class="screen-header">
+        <button type="button" id="btn-create-back" class="btn-icon" aria-label="Go Back">&larr;</button>
+        <h2 id="create-title" style="font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;">CREATE ROOM</h2>
+        <div style="width: 44px;"></div>
+      </header>
+
+      <div class="screen-body" style="justify-content: flex-start;">
+        <!-- Host Name Input -->
+        <div class="form-group">
+          <label for="input-host-name" class="form-label">Host Name</label>
+          <input
+            type="text"
+            id="input-host-name"
+            class="input-text"
+            placeholder="Enter your name (max 12)"
+            maxlength="12"
+            autocomplete="name"
+          >
+        </div>
+
+        <!-- Difficulty Selection -->
+        <div class="form-group">
+          <label class="form-label">Select Difficulty</label>
+          <div class="difficulty-group">
+            <!-- Level 1: Beginner -->
+            <div class="difficulty-card" data-difficulty="1" role="radio" aria-checked="false" tabindex="0">
+              <div class="diff-radio">
+                <div class="diff-radio-inner"></div>
+              </div>
+              <div class="diff-content">
+                <div class="diff-header">
+                  <span class="diff-title">Level 1: Beginner</span>
+                  <span class="diff-badge">Pure Listening</span>
+                </div>
+                <p class="diff-desc">1 Imposter. No Paranoia Tasks. Pure audio deduction game.</p>
+              </div>
+            </div>
+
+            <!-- Level 2: Standard (Default) -->
+            <div class="difficulty-card active" data-difficulty="2" role="radio" aria-checked="true" tabindex="0">
+              <div class="diff-radio">
+                <div class="diff-radio-inner"></div>
+              </div>
+              <div class="diff-content">
+                <div class="diff-header">
+                  <span class="diff-title">Level 2: Standard</span>
+                  <span class="diff-badge">Recommended</span>
+                </div>
+                <p class="diff-desc">1 Imposter. Paranoia Tasks are active. High room tension.</p>
+              </div>
+            </div>
+
+            <!-- Level 3: Chaos -->
+            <div class="difficulty-card" data-difficulty="3" role="radio" aria-checked="false" tabindex="0">
+              <div class="diff-radio">
+                <div class="diff-radio-inner"></div>
+              </div>
+              <div class="diff-content">
+                <div class="diff-header">
+                  <span class="diff-title">Level 3: Chaos</span>
+                  <span class="diff-badge">2 Decoys</span>
+                </div>
+                <p class="diff-desc">1 True Imposter, 2 Decoys with steady pulses. Paranoia Tasks active.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-footer">
+        <button type="button" id="btn-submit-create" class="btn btn-primary" disabled>CREATE</button>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 3: JOIN ==================== -->
+    <section id="screen-join" class="screen" aria-labelledby="join-title">
+      <header class="screen-header">
+        <button type="button" id="btn-join-back" class="btn-icon" aria-label="Go Back">&larr;</button>
+        <h2 id="join-title" style="font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;">JOIN ROOM</h2>
+        <div style="width: 44px;"></div>
+      </header>
+
+      <div class="screen-body" style="justify-content: flex-start; gap: 1rem;">
+        <!-- Spooky Error Box -->
+        <div id="join-error-box" class="error-banner" style="display: none;" role="alert">
+          <span style="font-size: 1.2rem;">⚠️</span>
+          <span id="join-error-text">Room does not exist.</span>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="input-room-code" class="form-label">4-Letter Room Code</label>
+            <span id="room-code-locked-badge" class="badge" style="display: none; color: var(--accent); border-color: var(--accent); font-size: 0.65rem; padding: 0.2rem 0.5rem;">
+              🔒 Locked from Invite Link
+            </span>
+          </div>
+          <input
+            type="text"
+            id="input-room-code"
+            class="input-text input-code"
+            placeholder="DARK"
+            maxlength="4"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="input-player-name" class="form-label">Your Name (Max 12 chars)</label>
+          <input
+            type="text"
+            id="input-player-name"
+            class="input-text"
+            placeholder="Enter your name"
+            maxlength="12"
+            autocomplete="name"
+          >
+        </div>
+
+        <!-- Hardware Rule Checkbox (PRD / GDD Mandatory Requirement) -->
+        <label class="checkbox-card" for="check-volume">
+          <input type="checkbox" id="check-volume">
+          <span class="checkbox-text">My phone volume is at MAX &amp; unmuted</span>
+        </label>
+      </div>
+
+      <div class="screen-footer">
+        <button type="button" id="btn-submit-join" class="btn btn-primary" disabled>JOIN ROOM</button>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 4: LOBBY ==================== -->
+    <section id="screen-lobby" class="screen" aria-labelledby="lobby-title">
+      <header class="screen-header">
+        <div class="badge">Lobby &bull; Waiting</div>
+        <div id="lobby-difficulty-badge" class="badge" style="border-color: var(--accent); color: var(--accent);">
+          Level 2: Standard
+        </div>
+      </header>
+
+      <div class="screen-body" style="justify-content: flex-start; gap: 1rem;">
+        <!-- Large Room Code Display with Copy Button -->
+        <div class="room-code-display">
+          <span class="room-code-label">Room Code</span>
+          <span id="lobby-room-code" class="room-code-value">DARK</span>
+          <button type="button" id="btn-copy-code" class="btn-copy">
+            <span>Copy Code</span>
+          </button>
+        </div>
+
+        <!-- Big QR Code Container (Host Only) -->
+        <div id="lobby-qr-card" class="card" style="text-align: center; padding: 1rem;">
+          <div id="lobby-qr-code" class="qr-container" aria-label="Room Join QR Code"></div>
+          <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 0.65rem;">
+            Scan with smartphone camera to join
+          </p>
+          <button type="button" id="btn-copy-link" class="btn-copy" style="width: 100%; margin-top: 0.75rem;">
+            <span>Copy Invite Link</span>
+          </button>
+        </div>
+
+        <!-- Non-Host Guest Status Card (Shown to players who are not the host) -->
+        <div id="lobby-guest-card" class="card" style="display: none; text-align: center; padding: 1.25rem;">
+          <div class="pulsing-radar-icon"></div>
+          <h3 style="font-size: 1.1rem; color: #ffffff; margin-bottom: 0.35rem; font-weight: 700;">Connected to Hunt</h3>
+          <p style="font-size: 0.82rem; color: var(--text-dim); line-height: 1.45;">
+            Phone volume must be at MAX. Keep screen in your hand. All screens will plunge to black when the host starts.
+          </p>
+        </div>
+
+        <!-- Players List -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span id="lobby-player-count" class="form-label">Players Connected (1)</span>
+              <span id="lobby-kick-hint" style="display: none; font-size: 0.72rem; color: var(--accent); font-weight: 600;">(Tap to kick)</span>
+            </div>
+            <span id="lobby-min-req-text" style="font-size: 0.75rem; color: var(--text-dim);">Min 3 players required</span>
+          </div>
+
+          <div id="lobby-players-list" class="player-list">
+            <!-- Dynamically populated with player chips -->
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-footer">
+        <!-- Host Start Button -->
+        <button type="button" id="btn-lobby-start" class="btn btn-primary" disabled>WAITING FOR PLAYERS (1/3)</button>
+
+        <!-- Non-Host Waiting Message -->
+        <div id="lobby-waiting-host-msg" class="waiting-host-bar" style="display: none;">
+          <span class="badge-pulse"></span>
+          <span>Waiting for the host...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast notification element -->
+    <div id="toast" class="toast-msg" role="status" aria-live="polite">Copied to clipboard!</div>
+
+    <!-- ==================== SCREEN 5: GAME (PURE PITCH BLACK #000) ==================== -->
+    <section id="screen-game" class="screen" aria-label="Game Screen (Pitch Black)">
+      <!-- Invisible Top-Left Long-Press Debug Trigger -->
+      <div id="game-debug-trigger" aria-label="Secret Debug Zone" style="position: absolute; top: 0; left: 0; width: 72px; height: 72px; z-index: 70; cursor: pointer;"></div>
+
+      <!-- Hidden Debug Overlay (Toggled via Long-Press on top-left corner) -->
+      <div id="game-debug-overlay" class="game-debug-overlay" style="display: none;" aria-live="polite">
+        <div class="debug-row">
+          <span class="debug-label">TIMER:</span>
+          <span id="debug-timer-val" class="debug-val">120s</span>
+        </div>
+        <div class="debug-row">
+          <span class="debug-label">ROLE:</span>
+          <span id="debug-role-val" class="debug-val crew">UNKNOWN</span>
+        </div>
+        <div class="debug-row">
+          <span class="debug-label">OFFSET:</span>
+          <span id="debug-offset-val" class="debug-val">0ms</span>
+        </div>
+        <div class="debug-row">
+          <span class="debug-label">GHOST:</span>
+          <span id="debug-ghost-val" class="debug-val" style="color: var(--ghost);">READY</span>
+        </div>
+      </div>
+
+      <!-- Paranoia Ring Container (Shrinking targets appear here) -->
+      <div id="paranoia-ring-container" class="paranoia-ring-container"></div>
+
+      <!-- Ghost Phase Hold Feedback Indicator (Imposter Only) -->
+      <div id="ghost-charge-ring" class="ghost-charge-ring"></div>
+      <div id="ghost-active-pill" class="ghost-active-pill" style="display: none;">
+        <span class="badge-pulse" style="background: var(--ghost); box-shadow: 0 0 10px var(--ghost);"></span>
+        <span>GHOST PHASE (MUTED)</span>
+      </div>
+
+      <!-- Eliminated Player Dead Overlay -->
+      <div id="game-dead-overlay" class="eliminated-overlay" style="display: none;">
+        <h2 class="dead-title">YOU ARE DEAD</h2>
+        <p class="dead-desc">
+          You failed the paranoia task.<br>
+          Your scream alerted the room.<br>
+          <span style="color: var(--accent); font-size: 0.8rem; margin-top: 0.65rem; display: inline-block;">
+            (Spectating in silence &bull; Voting locked)
+          </span>
+        </p>
+      </div>
+
+      <!-- Transient VOTE button (Spawns on double tap) -->
+      <button type="button" id="vote-trigger-btn" class="vote-trigger-btn" style="display: none;">
+        VOTE
+      </button>
+    </section>
+
+    <!-- ==================== SCREEN 6: VOTE ==================== -->
+    <section id="screen-vote" class="screen" aria-labelledby="vote-title">
+      <header class="screen-header">
+        <div style="width: 100%;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <span id="vote-title" style="font-weight: 800; color: var(--accent); letter-spacing: 0.08em; font-size: 0.9rem;">
+              EMERGENCY ACCUSATION
+            </span>
+            <span id="vote-countdown-text" style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--accent);">
+              15s
+            </span>
+          </div>
+          <div class="vote-timer-bar-container">
+            <div id="vote-timer-bar" class="vote-timer-bar"></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="screen-body">
+        <p id="vote-prompt-text" style="font-size: 0.9rem; color: var(--text-dim); text-align: center;">
+          Who carries the False Pulse? Select a suspect:
+        </p>
+
+        <div id="vote-spectator-msg" style="display: none; text-align: center; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; font-size: 0.85rem;">
+          ELIMINATED &bull; SPECTATING ONLY
+        </div>
+
+        <div id="vote-players-grid" class="vote-grid">
+          <!-- Populated dynamically with living players -->
+        </div>
+
+        <div id="vote-status-feedback" style="display: none; text-align: center; margin-top: 1rem; color: var(--text-dim); font-size: 0.85rem;">
+          <span class="badge-pulse"></span>
+          <span id="vote-status-text">Vote submitted. Waiting for room...</span>
+        </div>
+      </div>
+
+      <div class="screen-footer">
+        <button type="button" id="btn-skip-vote" class="btn btn-secondary">SKIP VOTE</button>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 7: END (REVEAL) ==================== -->
+    <section id="screen-end" class="screen" aria-labelledby="end-title">
+      <div class="screen-body">
+        <div style="text-align: center; margin-top: 1rem;">
+          <h2 id="end-title" class="title-glitch" style="font-size: 2.75rem; color: var(--success); text-shadow: 0 0 20px var(--success-glow);">
+            CREW WINS
+          </h2>
+          <p id="end-subtitle" class="subtitle" style="color: var(--text);">The Imposter was exposed in time.</p>
+        </div>
+
+        <div id="role-reveal-box" class="role-reveal-box">
+          <!-- Populated dynamically with role flip animations -->
+        </div>
+      </div>
+
+      <div class="screen-footer">
+        <button type="button" id="btn-play-again" class="btn btn-primary" style="display: none;">PLAY AGAIN</button>
+        <div id="end-waiting-host" class="waiting-host-bar" style="display: none;">
+          <span class="badge-pulse"></span>
+          <span>Waiting for host to play again...</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Full-Screen Horror Jumpscare Overlay -->
+  <div id="jumpscare-overlay" class="jumpscare-overlay" aria-hidden="true">
+    <img id="jumpscare-img" src="design/jumpscare.jpg" alt="Terror jumpscare" class="jumpscare-img">
+  </div>
+
+  <!-- Background Tab Warning Banner -->
+  <div id="tab-blur-warning" class="tab-blur-warning" role="alert">
+    ⚠️ SIGNAL BLURRED: Keep False Pulse active on your screen!
+  </div>
+
+  <!-- ES Modules (No build step, vanilla JS) -->
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/audio.js"></script>
+  <script type="module" src="js/game.js"></script>
+  <script type="module" src="js/router.js"></script>
+  <script type="module" src="js/ui.js"></script>
+</body>
+</html>
