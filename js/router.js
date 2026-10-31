@@ -74,14 +74,6 @@ class Router {
       window.location.hash = screenId;
     }
 
-    // Sync dev switcher buttons if present
-    document.querySelectorAll('.dev-nav-btn').forEach((btn) => {
-      if (btn.dataset.screen === screenId) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    });
 
     // Notify listeners
     this.listeners.forEach((fn) => fn(screenId));

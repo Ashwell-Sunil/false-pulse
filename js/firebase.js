@@ -427,10 +427,9 @@ export async function startGameWithRoles(code) {
   const players = roomData.players || {};
   const playerIds = Object.keys(players);
   const difficulty = Number(roomData.difficulty) || 2;
-  const minRequired = difficulty === 3 ? 5 : 3;
 
-  if (playerIds.length < minRequired) {
-    throw new Error(`Cannot start. Minimum ${minRequired} players required (currently ${playerIds.length}).`);
+  if (playerIds.length < 1) {
+    throw new Error("No players in the room to start the game.");
   }
 
   const rolesMap = generateRoleAssignments(playerIds, difficulty);

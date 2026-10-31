@@ -25,16 +25,6 @@
     <!-- Atmospheric fog layer for menu views -->
     <div class="bg-fog" aria-hidden="true"></div>
 
-    <!-- Quick Dev Switcher for Router Preview -->
-    <nav class="dev-nav-bar" aria-label="Dev Screen Switcher">
-      <button type="button" class="dev-nav-btn active" data-screen="home">1. Home</button>
-      <button type="button" class="dev-nav-btn" data-screen="create">2. Create</button>
-      <button type="button" class="dev-nav-btn" data-screen="join">3. Join</button>
-      <button type="button" class="dev-nav-btn" data-screen="lobby">4. Lobby</button>
-      <button type="button" class="dev-nav-btn" data-screen="game">5. Game</button>
-      <button type="button" class="dev-nav-btn" data-screen="vote">6. Vote</button>
-      <button type="button" class="dev-nav-btn" data-screen="end">7. End</button>
-    </nav>
 
     <!-- ==================== SCREEN 1: HOME ==================== -->
     <section id="screen-home" class="screen active" aria-labelledby="home-title">
@@ -242,7 +232,7 @@
               <span id="lobby-player-count" class="form-label">Players Connected (1)</span>
               <span id="lobby-kick-hint" style="display: none; font-size: 0.72rem; color: var(--accent); font-weight: 600;">(Tap to kick)</span>
             </div>
-            <span id="lobby-min-req-text" style="font-size: 0.75rem; color: var(--text-dim);">Min 3 players required</span>
+            <span id="lobby-min-req-text" style="font-size: 0.75rem; color: var(--text-dim);">Unlimited players</span>
           </div>
 
           <div id="lobby-players-list" class="player-list">
@@ -253,7 +243,7 @@
 
       <div class="screen-footer">
         <!-- Host Start Button -->
-        <button type="button" id="btn-lobby-start" class="btn btn-primary" disabled>WAITING FOR PLAYERS (1/3)</button>
+        <button type="button" id="btn-lobby-start" class="btn btn-primary">START GAME</button>
 
         <!-- Non-Host Waiting Message -->
         <div id="lobby-waiting-host-msg" class="waiting-host-bar" style="display: none;">

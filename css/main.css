@@ -875,49 +875,6 @@ html, body {
   color: var(--text-dim);
 }
 
-/* 8. Dev/Preview Screen Router Switcher Bar */
-.dev-nav-bar {
-  position: absolute;
-  top: var(--safe-top);
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(10, 10, 15, 0.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--surface-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.5rem;
-  overflow-x: auto;
-}
-
-.dev-nav-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.dev-nav-btn:hover {
-  color: var(--text);
-  border-color: var(--surface-border);
-}
-
-.dev-nav-btn.active {
-  background: var(--accent);
-  color: #ffffff;
-  border-color: var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
-}
 
 /* 9. Paranoia Tasks (Shrinking Ring) */
 .paranoia-ring-container {

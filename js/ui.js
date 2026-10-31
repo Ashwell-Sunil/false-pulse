@@ -111,7 +111,7 @@ function updateDifficultyUI(diff) {
     diffBadge.textContent = diffLabels[diff] || `Level ${diff}`;
   }
   if (minReqText) {
-    minReqText.textContent = diff === 3 ? "Min 5 players required (Chaos)" : "Min 3 players required";
+    minReqText.textContent = "Unlimited players";
   }
 }
 
@@ -318,14 +318,13 @@ function updateLobbyPlayers(players, hostId, isHost, difficulty) {
     playerListEl.appendChild(chip);
   });
 
-  // Host Start button check
+  // Host Start button check: Allow starting with any number of players!
   if (btnStart && isHost) {
-    if (count >= minRequired) {
-      btnStart.disabled = false;
+    btnStart.disabled = false;
+    if (count <= 1) {
       btnStart.textContent = "START GAME";
     } else {
-      btnStart.disabled = true;
-      btnStart.textContent = `WAITING FOR PLAYERS (${count}/${minRequired})`;
+      btnStart.textContent = `START GAME (${count} PLAYERS)`;
     }
   }
 }
@@ -340,17 +339,7 @@ function escapeHTML(str) {
  * Initialize all UI bindings and interactions
  */
 export function initUI() {
-  // 1. Dev Navigation Switcher (for previewing all screens)
-  document.querySelectorAll('.dev-nav-btn').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      const targetScreen = e.currentTarget.dataset.screen;
-      if (targetScreen) {
-        router.navigate(targetScreen);
-      }
-    });
-  });
-
-  // 2. Home Screen Buttons
+  // 1. Home Screen Buttons
   const btnHomeCreate = document.getElementById('btn-home-create');
   if (btnHomeCreate) {
     btnHomeCreate.addEventListener('click', () => {
