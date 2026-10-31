@@ -2,6 +2,8 @@
   "rules": {
     "rooms": {
       "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null",
         ".validate": "$code.matches(/^[A-Z]{4}$/)",
 
         "hostId": {
