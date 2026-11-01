@@ -524,6 +524,20 @@ export async function castVote(code, playerId, targetVote) {
 }
 
 /**
+ * Fetch fresh snapshot of room data
+ * @param {string} code
+ * @returns {Promise<Object|null>}
+ */
+export async function getRoomSnapshot(code) {
+  const formattedCode = (code || "").trim().toUpperCase();
+  if (!isConfigured()) return null;
+  const { db } = getFirebaseInstances();
+  const roomRef = ref(db, `rooms/${formattedCode}`);
+  const snap = await get(roomRef);
+  return snap.exists() ? snap.val() : null;
+}
+
+/**
  * Resume game from vote phase
  * @param {string} code
  * @param {number} newPausedTotal

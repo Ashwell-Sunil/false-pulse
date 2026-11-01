@@ -29,10 +29,6 @@
     <!-- ==================== SCREEN 1: HOME ==================== -->
     <section id="screen-home" class="screen active" aria-labelledby="home-title">
       <div class="screen-body">
-        <div class="badge">
-          <span class="badge-pulse"></span>
-          <span>Spookathon &bull; Track 4</span>
-        </div>
 
         <div style="text-align: center; margin: 1rem 0;">
           <h1 id="home-title" class="title-glitch">FALSE PULSE</h1>
@@ -258,6 +254,37 @@
 
     <!-- ==================== SCREEN 5: GAME (PURE PITCH BLACK #000) ==================== -->
     <section id="screen-game" class="screen" aria-label="Game Screen (Pitch Black)">
+      <!-- Dramatic Initial Role Reveal Splash (Shows on game start) -->
+      <div id="role-reveal-splash" class="role-reveal-splash" style="display: none;" role="dialog" aria-modal="true">
+        <div class="role-splash-card" id="role-splash-card">
+          <div id="role-splash-badge" class="role-splash-badge">CLASSIFIED ROLE</div>
+          <div id="role-splash-icon" class="role-splash-icon">🛡️</div>
+          <h1 id="role-splash-title" class="role-splash-title">YOU ARE CREW</h1>
+          <p id="role-splash-desc" class="role-splash-desc">
+            Your phone plays only ambient static. Walk around the room, listen closely to everyone's phone, and double-tap your screen to accuse the False Pulse!
+          </p>
+          <div id="role-splash-ability" class="role-splash-ability" style="display: none;">
+            <div class="ability-title">⚡ GHOST PHASE (STEALTH):</div>
+            <div class="ability-desc">Hold your screen for 2s anytime to mute your pulse for 10s.</div>
+          </div>
+          <div class="role-splash-timer-bar">
+            <div id="role-splash-timer-fill" class="role-splash-timer-fill"></div>
+          </div>
+          <button type="button" id="btn-enter-darkness" class="btn btn-primary" style="width: 100%; margin-top: 0.85rem;">
+            ENTER DARKNESS
+          </button>
+          <p id="role-splash-countdown" class="role-splash-countdown">Auto-entering in 5s...</p>
+        </div>
+      </div>
+
+      <!-- Discreet Peek Role Bar at Top of Pitch Black Screen -->
+      <div id="role-peek-bar" class="role-peek-bar">
+        <button type="button" id="btn-role-peek" class="btn-role-peek" title="Tap to view role">
+          <span id="role-peek-dot" class="role-peek-dot"></span>
+          <span id="role-peek-label">ROLE: ...</span>
+        </button>
+      </div>
+
       <!-- Invisible Top-Left Long-Press Debug Trigger -->
       <div id="game-debug-trigger" aria-label="Secret Debug Zone" style="position: absolute; top: 0; left: 0; width: 72px; height: 72px; z-index: 70; cursor: pointer;"></div>
 

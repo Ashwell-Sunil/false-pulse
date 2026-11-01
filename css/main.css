@@ -818,25 +818,226 @@ html, body {
 }
 
 .vote-card {
-  min-height: 64px;
-  padding: 0.75rem;
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
+  min-height: 72px;
+  padding: 0.85rem 1rem;
+  background: #1e202e !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 42, 61, 0.5) !important;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(255, 42, 61, 0.2);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.vote-card:hover, .vote-card.selected {
-  border-color: var(--accent);
-  background: var(--surface-elevated);
-  box-shadow: 0 0 15px var(--accent-glow);
+.vote-card:hover, .vote-card:active, .vote-card.selected {
+  border-color: #ff2a3d !important;
+  background: rgba(255, 42, 61, 0.3) !important;
+  box-shadow: 0 0 22px rgba(255, 42, 61, 0.8), inset 0 0 15px rgba(255, 42, 61, 0.4);
+  transform: scale(0.97);
+}
+
+/* Role Reveal Splash Overlay */
+.role-reveal-splash {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  background: rgba(4, 4, 8, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: screenFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.role-splash-card {
+  width: 100%;
+  max-width: 360px;
+  background: #0f1018;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 0 35px var(--accent-glow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all var(--transition-normal);
+}
+
+.role-splash-card.role-imposter {
+  border-color: #ff2a3d;
+  box-shadow: 0 0 45px rgba(255, 42, 61, 0.5), inset 0 0 20px rgba(255, 42, 61, 0.15);
+}
+
+.role-splash-card.role-decoy {
+  border-color: #ff9900;
+  box-shadow: 0 0 40px rgba(255, 153, 0, 0.45), inset 0 0 20px rgba(255, 153, 0, 0.15);
+}
+
+.role-splash-card.role-crew {
+  border-color: #00e676;
+  box-shadow: 0 0 40px rgba(0, 230, 118, 0.4), inset 0 0 20px rgba(0, 230, 118, 0.12);
+}
+
+.role-splash-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 0.3rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+}
+
+.role-splash-icon {
+  font-size: 3.2rem;
+  line-height: 1;
+  margin: 0.25rem 0;
+  animation: pulseGlow 1.8s ease-in-out infinite;
+}
+
+.role-splash-title {
+  font-family: var(--font-body);
+  font-size: 1.65rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.role-splash-card.role-imposter .role-splash-title {
+  color: #ff2a3d;
+  text-shadow: 0 0 15px rgba(255, 42, 61, 0.8);
+}
+
+.role-splash-card.role-decoy .role-splash-title {
+  color: #ff9900;
+  text-shadow: 0 0 15px rgba(255, 153, 0, 0.8);
+}
+
+.role-splash-card.role-crew .role-splash-title {
+  color: #00e676;
+  text-shadow: 0 0 15px rgba(0, 230, 118, 0.8);
+}
+
+.role-splash-desc {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #d1d5db;
+  margin: 0;
+}
+
+.role-splash-ability {
+  background: rgba(255, 42, 61, 0.12);
+  border: 1px dashed rgba(255, 42, 61, 0.5);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #ffffff;
+  width: 100%;
+}
+
+.role-splash-ability .ability-title {
+  font-weight: 800;
+  color: #ff2a3d;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.role-splash-timer-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.role-splash-timer-fill {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  transition: width 0.1s linear;
+}
+
+.role-splash-countdown {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* Discreet Peek Role Bar at Top of Pitch Black Screen */
+.role-peek-bar {
+  position: absolute;
+  top: calc(var(--safe-top) + 0.65rem);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 60;
+  pointer-events: auto;
+}
+
+.btn-role-peek {
+  background: rgba(18, 20, 28, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  transition: all var(--transition-fast);
+}
+
+.btn-role-peek:active {
+  transform: scale(0.95);
+  background: rgba(30, 32, 45, 0.95);
+}
+
+.role-peek-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #00e676;
+}
+
+.btn-role-peek.imposter .role-peek-dot {
+  background: #ff2a3d;
+  box-shadow: 0 0 10px #ff2a3d;
+}
+
+.btn-role-peek.decoy .role-peek-dot {
+  background: #ff9900;
+  box-shadow: 0 0 10px #ff9900;
+}
+
+.btn-role-peek.crew .role-peek-dot {
+  background: #00e676;
+  box-shadow: 0 0 10px #00e676;
 }
 
 /* 7. End Screen */

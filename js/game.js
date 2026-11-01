@@ -27,6 +27,7 @@ import {
   endGameWithResult,
   resetRoomToLobby,
   transferHost,
+  getRoomSnapshot,
   isConfigured 
 } from './firebase.js';
 
@@ -101,6 +102,7 @@ export class GameEngine {
   init() {
     this.listenToClockOffset();
     this.setupDebugTrigger();
+    this.setupRolePeek();
     this.setupGameScreenGestures();
     this.setupVisibilityListeners();
     console.log('[Game] Engine initialized.');
@@ -239,6 +241,112 @@ export class GameEngine {
         ghostVal.style.color = 'var(--ghost)';
       }
     }
+  }
+
+  /**
+   * Setup discreet role peek button on pitch-black screen
+   */
+  setupRolePeek() {
+    const btnPeek = document.getElementById('btn-role-peek');
+    if (btnPeek) {
+      btnPeek.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.showRoleAnnouncement(this.role);
+      });
+    }
+  }
+
+  /**
+   * Display dramatic role announcement splash with clear instructions
+   * @param {string} role - 'imposter' | 'decoy' | 'crew'
+   */
+  showRoleAnnouncement(role) {
+    const splash = document.getElementById('role-reveal-splash');
+    const card = document.getElementById('role-splash-card');
+    const badge = document.getElementById('role-splash-badge');
+    const icon = document.getElementById('role-splash-icon');
+    const title = document.getElementById('role-splash-title');
+    const desc = document.getElementById('role-splash-desc');
+    const ability = document.getElementById('role-splash-ability');
+    const countdown = document.getElementById('role-splash-countdown');
+    const timerFill = document.getElementById('role-splash-timer-fill');
+    const btnEnter = document.getElementById('btn-enter-darkness');
+
+    // Update discreet peek pill on the pitch black screen
+    const peekLabel = document.getElementById('role-peek-label');
+    const peekBtn = document.getElementById('btn-role-peek');
+    const currentRole = (role || 'crew').toLowerCase();
+
+    if (peekLabel) {
+      peekLabel.textContent = `YOU ARE: ${currentRole.toUpperCase()}`;
+    }
+    if (peekBtn) {
+      peekBtn.className = `btn-role-peek ${currentRole}`;
+    }
+
+    if (!splash || !card) return;
+
+    card.className = `role-splash-card role-${currentRole}`;
+
+    if (currentRole === 'imposter') {
+      if (badge) badge.textContent = '🩸 TOP SECRET • HUNT TARGET';
+      if (icon) icon.textContent = '🩸';
+      if (title) title.textContent = 'YOU ARE THE IMPOSTER';
+      if (desc) {
+        desc.textContent = 'Your phone pulses with the False Pulse every 5 seconds. The volume increases as time expires! Blend in and survive 120s.';
+      }
+      if (ability) ability.style.display = 'block';
+    } else if (currentRole === 'decoy') {
+      if (badge) badge.textContent = '⚠️ LEVEL 3 • SPECIAL ROLE';
+      if (icon) icon.textContent = '⚠️';
+      if (title) title.textContent = 'YOU ARE A DECOY';
+      if (desc) {
+        desc.textContent = 'Your phone plays a steady, calm heartbeat pulse. You are NOT the real imposter! If the crew wrongly votes you out, you lose instantly.';
+      }
+      if (ability) ability.style.display = 'none';
+    } else {
+      if (badge) badge.textContent = '🛡️ CREW OBJECTIVE';
+      if (icon) icon.textContent = '🛡️';
+      if (title) title.textContent = 'YOU ARE CREWMATE';
+      if (desc) {
+        desc.textContent = 'Your phone plays only ambient static. Walk around the room, listen closely to other phones, and find the False Pulse before time runs out!';
+      }
+      if (ability) ability.style.display = 'none';
+    }
+
+    splash.style.display = 'flex';
+
+    let secLeft = 5;
+    if (this.roleSplashTimer) clearInterval(this.roleSplashTimer);
+    if (countdown) countdown.textContent = `Entering darkness in ${secLeft}s...`;
+    if (timerFill) {
+      timerFill.style.transition = 'none';
+      timerFill.style.width = '100%';
+      setTimeout(() => {
+        timerFill.style.transition = 'width 5s linear';
+        timerFill.style.width = '0%';
+      }, 50);
+    }
+
+    const dismissSplash = () => {
+      if (this.roleSplashTimer) {
+        clearInterval(this.roleSplashTimer);
+        this.roleSplashTimer = null;
+      }
+      splash.style.display = 'none';
+    };
+
+    if (btnEnter) {
+      btnEnter.onclick = dismissSplash;
+    }
+
+    this.roleSplashTimer = setInterval(() => {
+      secLeft--;
+      if (countdown) countdown.textContent = `Entering darkness in ${secLeft}s...`;
+      if (secLeft <= 0) {
+        dismissSplash();
+      }
+    }, 1000);
   }
 
   /**
@@ -482,6 +590,7 @@ export class GameEngine {
         this.role = role;
         console.log(`[Game] Received assigned role: ${role}`);
         this.updateDebugOverlay();
+        this.showRoleAnnouncement(role);
 
         // Start gameplay audio once role is verified
         if (this.state === GAME_STATES.PLAYING) {
@@ -743,18 +852,20 @@ export class GameEngine {
 
     // Living players only
     const living = Object.entries(players).filter(([id, p]) => p.alive !== false);
+    this.livingCount = living.length;
 
     living.forEach(([id, p]) => {
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'vote-card';
-      card.textContent = p.name || 'Anonymous';
       card.disabled = !canVote;
 
-      if (id === this.playerId) {
-        card.style.opacity = '0.6';
-        card.textContent += ' (You)';
-      }
+      const isMe = id === this.playerId;
+      const cleanName = escapeHTML(p.name || 'Anonymous');
+      card.innerHTML = `
+        <span style="color: #ffffff; font-weight: 800; font-size: 1.15rem; text-shadow: 0 0 10px rgba(255,255,255,0.8);">${cleanName}</span>
+        ${isMe ? '<span style="font-size: 0.72rem; color: #ff9900; margin-left: 0.4rem; font-weight: 800; background: rgba(255, 153, 0, 0.2); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid rgba(255, 153, 0, 0.4);">(YOU)</span>' : ''}
+      `;
 
       card.addEventListener('click', () => {
         if (!canVote || this.hasVoted) return;
@@ -808,7 +919,7 @@ export class GameEngine {
     const totalSec = 15;
     let elapsedSec = 0;
 
-    this.voteCountdownTimer = setInterval(() => {
+    this.voteCountdownTimer = setInterval(async () => {
       elapsedSec++;
       const remaining = Math.max(0, totalSec - elapsedSec);
       if (countdownText) countdownText.textContent = `${remaining}s`;
@@ -816,6 +927,22 @@ export class GameEngine {
       if (bar) {
         const pct = (remaining / totalSec) * 100;
         bar.style.width = `${pct}%`;
+      }
+
+      // Early completion: if all living players have already voted, tally without waiting!
+      if (this.isHost && this.roomCode && elapsedSec >= 2) {
+        try {
+          const fresh = await getRoomSnapshot(this.roomCode);
+          if (fresh && fresh.votes) {
+            const votesCount = Object.keys(fresh.votes).length;
+            if (votesCount >= this.livingCount && this.livingCount > 0) {
+              clearInterval(this.voteCountdownTimer);
+              this.voteCountdownTimer = null;
+              this.tallyVotesAndConclude(fresh);
+              return;
+            }
+          }
+        } catch (err) {}
       }
 
       // If time runs out, host tallies votes
@@ -833,64 +960,92 @@ export class GameEngine {
    * Tally votes and determine outcome (Host only)
    * Majority on True Imposter -> Crew wins
    * Majority on innocent / Decoy -> Imposter wins (Decoy: instant loss)
-   * Tie or Skip -> Resume game, 30s cooldown
+   * Tie or Skip -> Resume game (Round 1), or Imposter wins if Vote 2 exhausted
    */
   async tallyVotesAndConclude(roomData) {
     if (!this.isHost || !this.roomCode) return;
 
-    const votes = roomData.votes || {};
-    const players = roomData.players || {};
-    const roles = roomData.roles || this.rolesCache;
+    let votes = roomData?.votes || {};
+    let roles = roomData?.roles || this.rolesCache || {};
+    let currentVoteCount = this.voteCount || 0;
 
-    const tally = {};
+    // Fetch fresh room data directly from Firebase to guarantee complete vote tally
+    try {
+      const freshSnap = await getRoomSnapshot(this.roomCode);
+      if (freshSnap) {
+        votes = freshSnap.votes || {};
+        roles = freshSnap.roles || roles;
+        currentVoteCount = freshSnap.voteCount || currentVoteCount;
+      }
+    } catch (err) {
+      console.warn('[Voting] Error fetching fresh room snapshot:', err);
+    }
+
+    const suspectTally = {};
+    let skipCount = 0;
+
     Object.values(votes).forEach((target) => {
-      if (target) {
-        tally[target] = (tally[target] || 0) + 1;
+      if (!target) return;
+      if (target === 'skip') {
+        skipCount++;
+      } else {
+        suspectTally[target] = (suspectTally[target] || 0) + 1;
       }
     });
 
-    let topTarget = null;
-    let maxVotes = 0;
-    let isTie = false;
+    let topSuspect = null;
+    let maxSuspectVotes = 0;
+    let isSuspectTie = false;
 
-    for (const [target, count] of Object.entries(tally)) {
-      if (count > maxVotes) {
-        maxVotes = count;
-        topTarget = target;
-        isTie = false;
-      } else if (count === maxVotes && count > 0) {
-        isTie = true;
+    for (const [suspectId, count] of Object.entries(suspectTally)) {
+      if (count > maxSuspectVotes) {
+        maxSuspectVotes = count;
+        topSuspect = suspectId;
+        isSuspectTie = false;
+      } else if (count === maxSuspectVotes && count > 0) {
+        isSuspectTie = true;
       }
     }
 
-    console.log('[Voting] Tally results:', tally, 'Top target:', topTarget, 'Is tie:', isTie);
+    console.log('[Voting] Tally: suspects=', suspectTally, 'skips=', skipCount, 'top=', topSuspect, 'tie=', isSuspectTie);
 
-    // If top vote was "skip" or there was a tie -> resume game!
-    if (!topTarget || topTarget === 'skip' || isTie) {
-      console.log('[Voting] Vote was skipped or tied. Resuming game.');
-      const pausedDuration = Date.now() - (this.pausedAt || Date.now());
-      const newPausedTotal = (this.pausedTotal || 0) + pausedDuration;
-      const newVoteCount = (this.voteCount || 0) + 1;
-      await resumeFromVote(this.roomCode, newPausedTotal, newVoteCount);
+    // Check if a suspect received majority votes (more votes than skips and no tie among suspects)
+    if (topSuspect && maxSuspectVotes > skipCount && !isSuspectTie) {
+      const targetRole = roles[topSuspect] || 'crew';
+
+      if (targetRole === 'imposter') {
+        // Crew exposed the Imposter! Crew Wins!
+        console.log('[Voting] True Imposter was voted out! Crew wins!');
+        await endGameWithResult(this.roomCode, 'crew', 'imposter_voted_out', roles);
+      } else if (targetRole === 'decoy') {
+        // Voted out a Decoy! Instant Loss -> Imposter Wins!
+        console.log('[Voting] Voted out a Decoy! Instant loss. Imposter wins!');
+        await endGameWithResult(this.roomCode, 'imposter', 'decoy_voted_out', roles);
+      } else {
+        // Voted out an innocent Crewmate! Imposter Wins!
+        console.log('[Voting] Voted out an innocent Crewmate. Imposter wins!');
+        await endGameWithResult(this.roomCode, 'imposter', 'crew_voted_out', roles);
+      }
       return;
     }
 
-    // Top target was a player!
-    const targetRole = roles[topTarget] || 'crew';
+    // No suspect majority found (tied votes, skip majority, or no votes cast)
+    const newVoteCount = currentVoteCount + 1;
 
-    if (targetRole === 'imposter') {
-      // Crew exposed the Imposter! Crew Wins!
-      console.log('[Voting] True Imposter was voted out! Crew wins!');
-      await endGameWithResult(this.roomCode, 'crew', 'imposter_voted_out', roles);
-    } else if (targetRole === 'decoy') {
-      // Voted out a Decoy! Instant Loss -> Imposter Wins!
-      console.log('[Voting] Voted out a Decoy! Instant loss. Imposter wins!');
-      await endGameWithResult(this.roomCode, 'imposter', 'decoy_voted_out', roles);
-    } else {
-      // Voted out an innocent Crewmate! Imposter Wins!
-      console.log('[Voting] Voted out an innocent Crewmate. Imposter wins!');
-      await endGameWithResult(this.roomCode, 'imposter', 'crew_voted_out', roles);
+    // RULE: Maximum 2 voting opportunities per game.
+    // If both votes are now used and the Imposter was not found, IMPOSTER WINS!
+    if (newVoteCount >= 2) {
+      console.log('[Voting] Both voting chances exhausted. Imposter wins!');
+      await endGameWithResult(this.roomCode, 'imposter', 'votes_exhausted', roles);
+      return;
     }
+
+    // Still have 1 vote remaining -> Resume hunt for final round!
+    console.log(`[Voting] Vote tied/skipped. Resuming hunt (${newVoteCount}/2 votes used).`);
+    const pausedDuration = Date.now() - (this.pausedAt || Date.now());
+    const newPausedTotal = (this.pausedTotal || 0) + pausedDuration;
+    await resumeFromVote(this.roomCode, newPausedTotal, newVoteCount);
+    return;
   }
 
   /**
@@ -981,7 +1136,8 @@ export class GameEngine {
         const reasonTexts = {
           timer_expired: '120 seconds elapsed. The hunt claimed all souls.',
           decoy_voted_out: 'A Decoy was executed! Instant disaster for the Crew.',
-          crew_voted_out: 'An innocent crewmate was wrongly accused.'
+          crew_voted_out: 'An innocent crewmate was wrongly accused.',
+          votes_exhausted: 'Both voting chances were wasted. The Imposter survives!'
         };
         endSubtitle.textContent = reasonTexts[reason] || 'The darkness consumed the room.';
       }
@@ -1094,3 +1250,9 @@ export class GameEngine {
 
 export const game = new GameEngine();
 game.init();
+
+function escapeHTML(str) {
+  return String(str || '').replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
