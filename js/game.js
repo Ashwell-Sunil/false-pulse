@@ -567,6 +567,13 @@ export class GameEngine {
         this.updateDebugOverlay();
         this.showRoleAnnouncement(role);
 
+        // Imposter has NO side tasks!
+        if (this.role === 'imposter') {
+          this.stopParanoiaTasks();
+        } else if (this.difficulty >= 2 && this.state === GAME_STATES.PLAYING) {
+          this.setupParanoiaTasks();
+        }
+
         // Start gameplay audio once role is verified
         if (this.state === GAME_STATES.PLAYING) {
           audio.startGameplayAudio(this.role, this.startedAt, this.pausedTotal, this.serverTimeOffset);
@@ -638,6 +645,10 @@ export class GameEngine {
     this.stopParanoiaTasks();
 
     if (this.difficulty < 2) return; // Level 1 (Beginner) has no side tasks
+    if (this.role === 'imposter') {
+      console.log('[Side Tasks] Imposter does not receive side tasks.');
+      return;
+    }
     if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
 
     console.log(`[Side Tasks] Starting Falling Blood Orb loop for Level ${this.difficulty}`);
@@ -685,6 +696,7 @@ export class GameEngine {
    * Player must tap it before it reaches the bottom!
    */
   spawnFallingBloodOrb(customData = null) {
+    if (this.role === 'imposter') return; // Imposter does not receive side tasks
     if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
 
     this.clearActiveRing();
@@ -752,6 +764,7 @@ export class GameEngine {
   }
 
   handleParanoiaTaskSpawn(taskData) {
+    if (this.role === 'imposter') return; // Imposter does not receive side tasks
     if (!taskData || !taskData.id || taskData.id === this.currentTaskId) return;
     this.currentTaskId = taskData.id;
     this.spawnFallingBloodOrb(taskData);
