@@ -102,7 +102,6 @@ export class GameEngine {
   init() {
     this.listenToClockOffset();
     this.setupDebugTrigger();
-    this.setupRolePeek();
     this.setupGameScreenGestures();
     this.setupVisibilityListeners();
     console.log('[Game] Engine initialized.');
@@ -244,19 +243,6 @@ export class GameEngine {
   }
 
   /**
-   * Setup discreet role peek button on pitch-black screen
-   */
-  setupRolePeek() {
-    const btnPeek = document.getElementById('btn-role-peek');
-    if (btnPeek) {
-      btnPeek.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.showRoleAnnouncement(this.role);
-      });
-    }
-  }
-
-  /**
    * Display dramatic role announcement splash with clear instructions
    * @param {string} role - 'imposter' | 'decoy' | 'crew'
    */
@@ -271,18 +257,7 @@ export class GameEngine {
     const countdown = document.getElementById('role-splash-countdown');
     const timerFill = document.getElementById('role-splash-timer-fill');
     const btnEnter = document.getElementById('btn-enter-darkness');
-
-    // Update discreet peek pill on the pitch black screen
-    const peekLabel = document.getElementById('role-peek-label');
-    const peekBtn = document.getElementById('btn-role-peek');
     const currentRole = (role || 'crew').toLowerCase();
-
-    if (peekLabel) {
-      peekLabel.textContent = `YOU ARE: ${currentRole.toUpperCase()}`;
-    }
-    if (peekBtn) {
-      peekBtn.className = `btn-role-peek ${currentRole}`;
-    }
 
     if (!splash || !card) return;
 

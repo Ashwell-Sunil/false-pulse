@@ -1154,63 +1154,7 @@ html, body {
   margin: 0;
 }
 
-/* Discreet Peek Role Bar at Top of Pitch Black Screen */
-.role-peek-bar {
-  position: absolute;
-  top: calc(var(--safe-top) + 0.65rem);
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 60;
-  pointer-events: auto;
-}
 
-.btn-role-peek {
-  background: rgba(18, 20, 28, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #ffffff;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-  transition: all var(--transition-fast);
-}
-
-.btn-role-peek:active {
-  transform: scale(0.95);
-  background: rgba(30, 32, 45, 0.95);
-}
-
-.role-peek-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #00e676;
-}
-
-.btn-role-peek.imposter .role-peek-dot {
-  background: #ff2a3d;
-  box-shadow: 0 0 10px #ff2a3d;
-}
-
-.btn-role-peek.decoy .role-peek-dot {
-  background: #ff9900;
-  box-shadow: 0 0 10px #ff9900;
-}
-
-.btn-role-peek.crew .role-peek-dot {
-  background: #00e676;
-  box-shadow: 0 0 10px #00e676;
-}
 
 /* 7. End Screen */
 .role-reveal-box {
