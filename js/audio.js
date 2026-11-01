@@ -96,8 +96,8 @@ class AudioEngine {
     }
 
     const manifest = {
-      static: ['audio/static.mp3', 'audio/static.wav'],
-      heartbeat_imposter: ['audio/heartbeat_imposter.mp3', 'audio/heartbeat_imposter.wav'],
+      static: ['audio/static.mp3', 'audio/static.mpeg.mp3', 'audio/static.mpeg', 'audio/static.wav'],
+      heartbeat_imposter: ['audio/heartbeat_imposter.mp3', 'audio/heartbeat_imposter.mpeg', 'audio/heartbeat_imposter.wav'],
       heartbeat_decoy: ['audio/heartbeat_decoy.mp3', 'audio/heartbeat_decoy.wav'],
       scream: ['audio/scream.mp3', 'audio/scream.wav'],
       jumpscare: ['audio/jumpscare.mp3', 'audio/jumpscare.wav']
