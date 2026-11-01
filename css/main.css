@@ -1249,7 +1249,7 @@ html, body {
 }
 
 
-/* 9. Paranoia Tasks (Shrinking Ring) */
+/* 9. Side Tasks: Falling Blood Orb (Medium & Hard Mode) */
 .paranoia-ring-container {
   position: absolute;
   inset: 0;
@@ -1258,48 +1258,116 @@ html, body {
   overflow: hidden;
 }
 
-.paranoia-ring {
+/* Falling Blood Orb */
+.blood-orb {
   position: absolute;
-  width: 90px;
-  height: 90px;
-  border: 3px solid #ffffff;
+  top: -85px;
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.9), inset 0 0 10px rgba(255, 255, 255, 0.5);
   pointer-events: auto;
   cursor: pointer;
-  transform: translate(-50%, -50%) scale(1);
-  animation: paranoiaShrink 3.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  touch-action: manipulation;
+  z-index: 55;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ff4d6d 22%, #e60026 55%, #800014 90%);
+  box-shadow: 
+    0 0 20px #ff1744,
+    0 0 45px rgba(230, 0, 38, 0.85),
+    0 0 75px rgba(168, 3, 27, 0.6),
+    inset 0 0 16px rgba(255, 255, 255, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  will-change: transform, top;
 }
 
-.paranoia-ring::after {
+/* Pulsing aura around the orb */
+.blood-orb::before {
   content: '';
-  width: 14px;
-  height: 14px;
-  background: #ffffff;
+  position: absolute;
+  inset: -10px;
   border-radius: 50%;
-  box-shadow: 0 0 10px #ffffff;
+  background: radial-gradient(circle, rgba(255, 23, 68, 0.45) 0%, transparent 70%);
+  animation: orbAuraPulse 1.2s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-@keyframes paranoiaShrink {
+/* Eerie weeping eye core in the orb */
+.blood-orb::after {
+  content: '👁';
+  font-size: 1.25rem;
+  color: #ffffff;
+  filter: drop-shadow(0 0 4px #000000);
+  opacity: 0.92;
+  pointer-events: none;
+  transform: scale(0.95);
+}
+
+@keyframes orbAuraPulse {
   0% {
-    transform: translate(-50%, -50%) scale(1.6);
-    opacity: 1;
-    border-color: #ffffff;
-  }
-  65% {
-    border-color: #ffaa44;
-  }
-  85% {
-    border-color: #ff2a3d;
+    transform: scale(0.92);
+    opacity: 0.6;
   }
   100% {
-    transform: translate(-50%, -50%) scale(0.08);
-    opacity: 0.8;
-    border-color: #ff2a3d;
+    transform: scale(1.25);
+    opacity: 1;
   }
+}
+
+/* Fall animation down the screen */
+@keyframes orbFallLinear {
+  0% {
+    top: -85px;
+    transform: translateX(0) scale(0.92);
+  }
+  20% {
+    transform: translateX(12px) scale(1.04);
+  }
+  45% {
+    transform: translateX(-14px) scale(0.96);
+  }
+  70% {
+    transform: translateX(10px) scale(1.02);
+  }
+  90% {
+    transform: translateX(-6px) scale(1.08);
+  }
+  100% {
+    top: 105%;
+    transform: translateX(0) scale(1.1);
+  }
+}
+
+/* Burst particle animation when tapped in time */
+.blood-orb.burst {
+  pointer-events: none;
+  animation: orbBurst 0.35s cubic-bezier(0.1, 0.9, 0.2, 1) forwards !important;
+}
+
+@keyframes orbBurst {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(2) contrast(1.5);
+    box-shadow: 0 0 40px #ffffff, 0 0 80px #ff1744;
+  }
+  50% {
+    transform: scale(1.85);
+    opacity: 0.75;
+    box-shadow: 0 0 60px #ff1744, 0 0 120px #ff1744;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+    box-shadow: none;
+  }
+}
+
+/* Legacy fallback support */
+.paranoia-ring {
+  display: none;
 }
 
 /* 10. Eliminated Player (Dead Screen) */

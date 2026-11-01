@@ -366,7 +366,7 @@ export class GameEngine {
 
     // Pointer down: handle double tap and ghost hold start
     gameScreen.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('#vote-trigger-btn') || e.target.closest('.paranoia-ring') || e.target.closest('#game-debug-trigger')) {
+      if (e.target.closest('#vote-trigger-btn') || e.target.closest('.paranoia-ring') || e.target.closest('.blood-orb') || e.target.closest('#game-debug-trigger')) {
         return;
       }
       if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
@@ -545,8 +545,8 @@ export class GameEngine {
     this.roomCode = sessionStorage.getItem('fp_roomCode');
     this.playerId = sessionStorage.getItem('fp_playerId');
     this.playerName = sessionStorage.getItem('fp_playerName') || 'Player';
-    this.isHost = sessionStorage.getItem('fp_isHost') === 'true';
-    this.difficulty = Number(roomData.difficulty) || 2;
+    this.isHost = (sessionStorage.getItem('fp_isHost') === 'true') || (roomData.hostId && roomData.hostId === this.playerId);
+    this.difficulty = Number(roomData.difficulty) || Number(sessionStorage.getItem('fp_difficulty')) || 2;
     this.state = GAME_STATES.PLAYING;
     this.isAlive = true;
 
@@ -654,48 +654,43 @@ export class GameEngine {
   }
 
   /**
-   * Paranoia Tasks System (Levels 2 and 3):
-   * Every 15-30s, a shrinking white ring appears on all living screens.
+   * Side Tasks System (Levels 2 and 3):
+   * Falling Red Blood Orb: Descends from top of screen to bottom.
+   * Players MUST tap the falling orb before it reaches the bottom!
    * Failing to tap eliminates the player with scream.mp3 and red DEAD screen.
    */
   setupParanoiaTasks() {
     this.stopParanoiaTasks();
 
-    if (!this.isHost) return; // Only host generates and synchronizes tasks
+    if (this.difficulty < 2) return; // Level 1 (Beginner) has no side tasks
+    if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
 
-    const scheduleNextTask = () => {
-      if (this.state !== GAME_STATES.PLAYING) return;
+    console.log(`[Side Tasks] Starting Falling Blood Orb loop for Level ${this.difficulty}`);
 
-      // Random delay between 15s and 30s
-      const delayMs = Math.floor(15000 + Math.random() * 15000);
+    const scheduleNextOrb = () => {
+      if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
 
-      this.paranoiaTaskTimer = setTimeout(async () => {
-        if (this.state !== GAME_STATES.PLAYING) return;
+      // Medium (Level 2): 15s - 24s interval
+      // Hard (Level 3): 10s - 18s interval
+      const minDelay = this.difficulty === 3 ? 10000 : 15000;
+      const varDelay = this.difficulty === 3 ? 8000 : 9000;
+      const delayMs = Math.floor(minDelay + Math.random() * varDelay);
 
-        // Bounded coordinates so ring is fully visible and clickable
-        const xPct = Math.floor(20 + Math.random() * 60);
-        const yPct = Math.floor(25 + Math.random() * 50);
-        const taskId = 'task_' + Date.now();
+      this.paranoiaTaskTimer = setTimeout(() => {
+        if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
 
-        const taskData = {
-          id: taskId,
-          spawnedAt: Date.now() + this.serverTimeOffset,
-          durationMs: 3800,
-          xPct,
-          yPct
-        };
-
-        try {
-          await spawnParanoiaTask(this.roomCode, taskData);
-          console.log('[Paranoia] Spawned task:', taskData);
-        } catch (e) {}
-
-        // Schedule subsequent task
-        scheduleNextTask();
+        this.spawnFallingBloodOrb();
+        scheduleNextOrb();
       }, delayMs);
     };
 
-    scheduleNextTask();
+    // First orb drops 8-12 seconds after entering darkness
+    const initialDelay = Math.floor(8000 + Math.random() * 4000);
+    this.paranoiaTaskTimer = setTimeout(() => {
+      if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
+      this.spawnFallingBloodOrb();
+      scheduleNextOrb();
+    }, initialDelay);
   }
 
   stopParanoiaTasks() {
@@ -711,52 +706,80 @@ export class GameEngine {
   }
 
   /**
-   * Display shrinking Paranoia ring on screen for this player
-   * @param {Object} taskData
+   * Spawn a falling red blood orb that descends from the top of the screen.
+   * Player must tap it before it reaches the bottom!
    */
-  handleParanoiaTaskSpawn(taskData) {
-    if (!taskData || !taskData.id || taskData.id === this.currentTaskId) return;
+  spawnFallingBloodOrb(customData = null) {
     if (this.state !== GAME_STATES.PLAYING || !this.isAlive) return;
 
-    this.currentTaskId = taskData.id;
     this.clearActiveRing();
 
     const container = document.getElementById('paranoia-ring-container');
     if (!container) return;
 
-    const ring = document.createElement('div');
-    ring.className = 'paranoia-ring';
-    ring.style.left = `${taskData.xPct}%`;
-    ring.style.top = `${taskData.yPct}%`;
+    // Medium: 4.2s to fall; Hard: 3.2s to fall
+    const fallDurationMs = customData?.durationMs || (this.difficulty === 3 ? 3200 : 4200);
 
-    let ringTapped = false;
+    // Random horizontal position within safe mobile bounds (15% to 78%)
+    const leftPct = customData?.xPct || Math.floor(15 + Math.random() * 63);
 
-    // Successful tap before shrinking to zero
-    ring.addEventListener('pointerdown', (e) => {
-      e.stopPropagation();
-      if (ringTapped) return;
-      ringTapped = true;
+    const orb = document.createElement('div');
+    orb.className = 'blood-orb';
+    orb.setAttribute('role', 'button');
+    orb.setAttribute('aria-label', 'Tap the falling blood orb!');
+    orb.style.left = `${leftPct}%`;
+    orb.style.animation = `orbFallLinear ${fallDurationMs}ms linear forwards`;
 
-      // Subtle haptic feedback on successful tap
-      if (navigator.vibrate) try { navigator.vibrate(40); } catch {}
+    let orbTapped = false;
 
-      ring.remove();
+    const handleOrbTap = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (orbTapped) return;
+      orbTapped = true;
+
+      // Haptic confirmation
+      if (navigator.vibrate) {
+        try { navigator.vibrate([40, 25, 60]); } catch {}
+      }
+
+      // Play burst effect
+      orb.classList.add('burst');
+
       if (this.activeTaskTimeout) {
         clearTimeout(this.activeTaskTimeout);
         this.activeTaskTimeout = null;
       }
-      console.log('[Paranoia] Task completed successfully!');
-    });
 
-    container.appendChild(ring);
+      console.log('[Side Task] Falling blood orb caught in time!');
 
-    // If player fails to tap within duration -> ELIMINATION!
+      setTimeout(() => {
+        if (orb.parentNode) orb.remove();
+      }, 350);
+    };
+
+    orb.addEventListener('pointerdown', handleOrbTap, { passive: false });
+    orb.addEventListener('touchstart', handleOrbTap, { passive: false });
+    orb.addEventListener('click', handleOrbTap);
+
+    container.appendChild(orb);
+
+    // If the orb reaches the bottom without being tapped -> ELIMINATION!
     this.activeTaskTimeout = setTimeout(() => {
-      if (!ringTapped && this.state === GAME_STATES.PLAYING && this.isAlive) {
-        ring.remove();
+      if (!orbTapped && this.state === GAME_STATES.PLAYING && this.isAlive) {
+        if (orb.parentNode) orb.remove();
+        console.warn('[Side Task] Blood orb missed! Player eliminated.');
         this.eliminateThisPlayer();
       }
-    }, taskData.durationMs || 3800);
+    }, fallDurationMs + 50);
+  }
+
+  handleParanoiaTaskSpawn(taskData) {
+    if (!taskData || !taskData.id || taskData.id === this.currentTaskId) return;
+    this.currentTaskId = taskData.id;
+    this.spawnFallingBloodOrb(taskData);
   }
 
   clearActiveRing() {
