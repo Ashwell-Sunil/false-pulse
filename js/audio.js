@@ -388,12 +388,12 @@ class AudioEngine {
 
     if (this.role === 'imposter') {
       bufferKey = 'heartbeat_imposter';
-      // Gain starts at 0.4 and rises 0.025 per pulse to 1.0 at 120s (pulse index 24)
-      baseGain = Math.min(1.0, 0.4 + (0.025 * pulseIndex));
+      // Boosted volume: starts strong at 0.9 and scales up to 1.8 by the end of 120s
+      baseGain = Math.min(1.8, 0.9 + (0.038 * pulseIndex));
     } else if (this.role === 'decoy') {
       bufferKey = 'heartbeat_decoy';
-      // Decoys have a steady heartbeat that never changes volume (gain 0.4)
-      baseGain = 0.4;
+      // Decoys have a steady heartbeat that never changes volume
+      baseGain = 0.65;
     } else {
       return; // Crew hear nothing
     }
