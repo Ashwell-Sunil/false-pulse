@@ -44,7 +44,7 @@ html, body {
   inset: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(ellipse at center, rgba(255, 42, 61, 0.05) 0%, transparent 60%);
+  background: radial-gradient(ellipse at center, rgba(230, 0, 38, 0.08) 0%, rgba(138, 3, 22, 0.03) 45%, transparent 68%);
   pointer-events: none;
   animation: fogDrift 20s ease-in-out infinite alternate;
   z-index: 0;
@@ -112,34 +112,190 @@ html, body {
   gap: 0.75rem;
 }
 
+/* Screen Landing - Surreal Eldritch Horror Artwork Background */
+#screen-home.screen-landing,
+#screen-home {
+  position: relative;
+  background-color: #060103;
+  overflow: hidden;
+}
+
+.landing-bg-overlay {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  background-image: 
+    radial-gradient(ellipse at 50% 28%, rgba(8, 2, 4, 0.22) 0%, rgba(6, 1, 3, 0.65) 60%, #060103 100%),
+    linear-gradient(180deg, rgba(8, 2, 4, 0.35) 0%, rgba(6, 1, 3, 0.5) 35%, rgba(6, 1, 3, 0.85) 75%, #060103 100%),
+    url('../images/landing-bg.jpg');
+  background-position: center 25%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+  animation: eldritchBreathe 24s ease-in-out infinite alternate;
+  filter: contrast(1.15) brightness(0.96) saturate(1.1);
+}
+
+@keyframes eldritchBreathe {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.05) translate(-0.6%, 0.8%);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+#screen-home .screen-body,
+#screen-home .screen-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-brand-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0.5rem 0 1rem;
+}
+
+.landing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(18, 4, 8, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(230, 0, 38, 0.35);
+  color: #f7d2d8;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 0 16px rgba(230, 0, 38, 0.2);
+}
+
+.gothic-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 75%;
+  max-width: 260px;
+  margin: 0.35rem auto 0.75rem;
+  opacity: 0.85;
+}
+
+.gothic-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(230, 0, 38, 0.7), transparent);
+}
+
+.gothic-icon {
+  color: #ff1a40;
+  font-size: 0.75rem;
+  text-shadow: 0 0 8px #ff1a40;
+}
+
+.landing-card {
+  background: rgba(14, 3, 6, 0.82) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(230, 0, 38, 0.38) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75), inset 0 0 25px rgba(168, 3, 27, 0.12) !important;
+  text-align: center;
+}
+
+.landing-desc {
+  font-size: 0.88rem;
+  color: #ede2e5;
+  line-height: 1.55;
+}
+
+.landing-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(230, 0, 38, 0.18);
+}
+
+.landing-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #fce8ec;
+  background: rgba(28, 7, 13, 0.75);
+  border: 1px solid rgba(230, 0, 38, 0.3);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.03em;
+}
+
+.btn-landing-pulse {
+  animation: primaryPulseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes primaryPulseGlow {
+  0% {
+    box-shadow: 0 4px 22px rgba(217, 4, 41, 0.55), inset 0 1px 0 rgba(255, 140, 160, 0.35);
+  }
+  100% {
+    box-shadow: 0 6px 32px rgba(255, 26, 64, 0.8), inset 0 1px 0 rgba(255, 180, 200, 0.6);
+  }
+}
+
 /* 3. Typography & Spooky Titles */
 .title-glitch {
   font-family: var(--font-display);
-  font-size: 3.25rem;
-  line-height: 1.1;
-  color: var(--accent);
-  text-shadow: 0 0 16px var(--accent-glow), 0 0 32px var(--accent-glow);
-  letter-spacing: 0.05em;
+  font-size: 3.5rem;
+  line-height: 1.05;
+  color: #ff1a40;
+  text-shadow: 
+    0 0 10px rgba(255, 26, 64, 0.9),
+    0 0 25px rgba(230, 0, 38, 0.75),
+    0 0 50px rgba(168, 3, 27, 0.95),
+    0 4px 14px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.08em;
   text-align: center;
-  animation: titlePulse 4s ease-in-out infinite;
+  animation: titlePulse 3.5s ease-in-out infinite;
 }
 
 @keyframes titlePulse {
   0%, 100% {
-    text-shadow: 0 0 14px var(--accent-glow), 0 0 28px var(--accent-glow);
-    opacity: 0.98;
+    text-shadow: 
+      0 0 12px rgba(255, 26, 64, 0.85),
+      0 0 24px rgba(230, 0, 38, 0.65),
+      0 0 45px rgba(168, 3, 27, 0.85),
+      0 4px 14px rgba(0, 0, 0, 0.95);
   }
   50% {
-    text-shadow: 0 0 24px var(--accent-glow-strong), 0 0 45px var(--accent-glow);
-    opacity: 1;
+    text-shadow: 
+      0 0 18px rgba(255, 30, 70, 1),
+      0 0 36px rgba(255, 26, 64, 0.95),
+      0 0 70px rgba(230, 0, 38, 0.9),
+      0 4px 18px rgba(0, 0, 0, 1);
   }
 }
 
 .subtitle {
   text-align: center;
-  color: var(--text-dim);
+  color: #f3d8df;
   font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .badge {
@@ -176,12 +332,13 @@ html, body {
   border-radius: var(--radius-md);
   font-family: var(--font-body);
   font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
   border: none;
   outline: none;
-  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
   text-decoration: none;
   width: 100%;
 }
@@ -191,25 +348,33 @@ html, body {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, #d90429 0%, #a8001a 50%, #58000d 100%);
   color: #ffffff;
-  box-shadow: 0 4px 20px var(--accent-glow);
+  border: 1px solid rgba(255, 70, 95, 0.65);
+  box-shadow: 0 4px 22px rgba(217, 4, 41, 0.55), inset 0 1px 0 rgba(255, 140, 160, 0.35);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  box-shadow: 0 4px 25px var(--accent-glow-strong);
+  background: linear-gradient(135deg, #ff1744 0%, #c40022 50%, #750012 100%);
+  box-shadow: 0 4px 30px rgba(255, 23, 68, 0.85), inset 0 1px 0 rgba(255, 180, 200, 0.5);
+  border-color: rgba(255, 130, 150, 0.85);
 }
 
 .btn-secondary {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--surface-border);
+  background: rgba(18, 4, 8, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fcf6f8;
+  border: 1px solid rgba(230, 0, 38, 0.45);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), inset 0 0 14px rgba(217, 4, 41, 0.1);
 }
 
 .btn-secondary:hover {
-  background: var(--surface-elevated);
-  border-color: var(--text-dim);
+  background: rgba(34, 9, 16, 0.95);
+  border-color: rgba(255, 26, 64, 0.75);
+  box-shadow: 0 0 22px rgba(230, 0, 38, 0.45);
+  color: #ffffff;
 }
 
 .btn-ghost {
@@ -254,6 +419,8 @@ html, body {
   min-height: 52px;
   padding: 0 1rem;
   background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-md);
   color: var(--text);
@@ -266,7 +433,7 @@ html, body {
 
 .input-text:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 0 0 16px var(--accent-glow);
 }
 
 .input-code {
@@ -343,9 +510,12 @@ html, body {
 /* Cards & Surface Panes */
 .card {
   background: var(--surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), inset 0 0 16px rgba(168, 3, 27, 0.08);
 }
 
 /* Difficulty Cards Group */
@@ -359,6 +529,8 @@ html, body {
   min-height: 72px;
   padding: 1rem;
   background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -370,14 +542,14 @@ html, body {
 }
 
 .difficulty-card:hover {
-  border-color: rgba(255, 42, 61, 0.4);
+  border-color: rgba(255, 26, 64, 0.55);
   background: var(--surface-elevated);
 }
 
 .difficulty-card.active {
   border-color: var(--accent);
   background: var(--surface-elevated);
-  box-shadow: 0 0 16px var(--accent-glow);
+  box-shadow: 0 0 20px var(--accent-glow);
 }
 
 .diff-radio {

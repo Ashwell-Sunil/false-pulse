@@ -1,27 +1,27 @@
 /* False Pulse - Design System Tokens */
 :root {
-  /* Color Palette */
-  --bg: #000000;
-  --bg-menu: #0a0a0f;
-  --bg-gradient: radial-gradient(circle at 50% 15%, rgba(45, 12, 20, 0.5) 0%, #0a0a10 65%, #000000 100%);
+  /* Color Palette - Gothic Eldritch Blood & Obsidian */
+  --bg: #060103;
+  --bg-menu: #0a0205;
+  --bg-gradient: radial-gradient(ellipse at 50% 18%, rgba(168, 3, 27, 0.42) 0%, #0e0206 50%, #050102 100%);
   
-  --surface: #14141c;
-  --surface-elevated: #1a1a26;
-  --surface-border: #28283a;
-  --surface-active: #222232;
+  --surface: rgba(18, 4, 8, 0.82);
+  --surface-elevated: rgba(30, 8, 14, 0.90);
+  --surface-border: rgba(230, 0, 38, 0.28);
+  --surface-active: rgba(45, 12, 20, 0.95);
 
-  --text: #e8e6e3;
-  --text-dim: #8a8790;
-  --text-muted: #5e5b66;
+  --text: #fcf6f8;
+  --text-dim: #c2aab1;
+  --text-muted: #7d6067;
 
-  /* Accent & Status */
-  --accent: #ff2a3d;
-  --accent-hover: #ff4757;
-  --accent-glow: rgba(255, 42, 61, 0.4);
-  --accent-glow-strong: rgba(255, 42, 61, 0.8);
+  /* Accent & Status - Eldritch Scarlet & Blood Red */
+  --accent: #e60026;
+  --accent-hover: #ff1a40;
+  --accent-glow: rgba(230, 0, 38, 0.45);
+  --accent-glow-strong: rgba(255, 26, 64, 0.85);
   
-  --ghost: #7a5cff;
-  --ghost-glow: rgba(122, 92, 255, 0.4);
+  --ghost: #9c1c34;
+  --ghost-glow: rgba(156, 28, 52, 0.45);
   
   --success: #3ddc97;
   --success-glow: rgba(61, 220, 151, 0.4);

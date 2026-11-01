@@ -27,23 +27,38 @@
 
 
     <!-- ==================== SCREEN 1: HOME ==================== -->
-    <section id="screen-home" class="screen active" aria-labelledby="home-title">
-      <div class="screen-body">
+    <section id="screen-home" class="screen active screen-landing" aria-labelledby="home-title">
+      <div class="landing-bg-overlay" aria-hidden="true"></div>
 
-        <div style="text-align: center; margin: 1rem 0;">
+      <div class="screen-body">
+        <div class="landing-brand-wrap">
+          <div class="landing-badge">
+            <span class="badge-pulse"></span>
+            <span>IN-PERSON HORROR DEDUCTION</span>
+          </div>
           <h1 id="home-title" class="title-glitch">FALSE PULSE</h1>
+          <div class="gothic-divider" aria-hidden="true">
+            <span class="gothic-line"></span>
+            <span class="gothic-icon">✦</span>
+            <span class="gothic-line"></span>
+          </div>
           <p class="subtitle">Listen closely. The heartbeat doesn't lie.</p>
         </div>
 
-        <div class="card" style="text-align: center;">
-          <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.45;">
+        <div class="card landing-card">
+          <p class="landing-desc">
             An in-person, room-scale audio deduction game for smartphones. Screens go pitch black, static fills the room, and one player carries a hidden pulse.
           </p>
+          <div class="landing-tags">
+            <span class="landing-tag">🎧 Wear Earbuds</span>
+            <span class="landing-tag">🌑 Pitch Black</span>
+            <span class="landing-tag">⏱ 120s Timer</span>
+          </div>
         </div>
       </div>
 
       <div class="screen-footer">
-        <button type="button" id="btn-home-create" class="btn btn-primary">CREATE ROOM</button>
+        <button type="button" id="btn-home-create" class="btn btn-primary btn-landing-pulse">CREATE ROOM</button>
         <button type="button" id="btn-home-join" class="btn btn-secondary">JOIN ROOM</button>
       </div>
     </section>
